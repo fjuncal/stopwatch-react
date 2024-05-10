@@ -37,7 +37,6 @@ const Timer = () => {
 
   const addLap = () => {
     setLaps([...laps, formatTime()]);
-    console.log(laps);
   };
 
   useEffect(() => {
@@ -62,7 +61,7 @@ const Timer = () => {
         onReset={resetTimer}
         onLap={addLap}
       />
-      <LapList />
+      <LapList laps={laps} />
     </div>
   );
 };

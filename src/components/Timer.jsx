@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TimerDisplay from "./TimerDisplay";
 import TimerControls from "./TimerControls";
 import LapList from "./LapList";
 import "./Timer.css";
 const Timer = () => {
   const [milliseconds, setMilliseconds] = useState(0);
-  const [timerOn, setTimerOn] = useState(0);
+  const [timerOn, setTimerOn] = useState(false);
   const [laps, setLaps] = useState([]);
 
   const formatTime = () => {
@@ -17,11 +17,36 @@ const Timer = () => {
 
     return `${minutes}:${seconds}:${centiSeconds}`;
   };
-  formatTime();
+  const startTimer = (interval) => {
+    return setInterval(() => {
+      setMilliseconds((prevMilliseconds) => prevMilliseconds + 10);
+    }, 10);
+  };
+
+  const stopTimer = (interval) => {
+    clearInterval(interval);
+    return interval;
+  };
+
+  useEffect(() => {
+    let interval = null;
+
+    if (timerOn) {
+      interval = startTimer(interval);
+    } else {
+      interval = stopTimer(interval);
+    }
+
+    return () => stopTimer(interval);
+  }, [timerOn]);
+
   return (
     <div className="timer-container">
       <TimerDisplay time={formatTime()} />
-      <TimerControls />
+      <TimerControls
+        onStart={() => setTimerOn(true)}
+        onStop={() => setTimerOn(false)}
+      />
       <LapList />
     </div>
   );
